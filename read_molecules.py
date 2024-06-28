@@ -1,4 +1,4 @@
-from typing import TextIO, Dict
+from typing import TextIO, Dict, Tuple, Optional
 from io import StringIO
 
 Atom = Tuple[str, Tuple[str, str, str]]
@@ -12,17 +12,17 @@ def read_molecule(reader: TextIO) -> Optional[CompoundDict]:
     >>> instring = 'COMPND TEST\\nATOM 1 N 0.1 0.2 0.3\\nATOM 2 N 0.2 0.1 0.0\\nEND\\n'
     >>> infile = StringIO(instring)
     >>> read_molecule(infile)
-    {'TEST' : [('N', ('0.1', '0.2', '0.3')), ('N', ('0.2', '0.1', '0.0'))]}
+    {'TEST': [('N', ('0.1', '0.2', '0.3')), ('N', ('0.2', '0.1', '0.0'))]}
     """
 
     # If there isn't a line, we're at the end of the file
     line = reader.readline()
     if not line:
         return None
-    molecule = dict()
+    molecule = {}
 
     # Name of the molecule: "COMPND [name]"
-    parts = line.spit()
+    parts = line.split()
     name = parts[1]
 
     # The list of Atoms
@@ -34,6 +34,13 @@ def read_molecule(reader: TextIO) -> Optional[CompoundDict]:
             reading = False
         else:
             parts = line.split()
-    
+            atom_name = parts[2]
+            others = tuple(parts[3:])
+            atoms.append((atom_name, others))
 
+    molecule[name] = atoms
+    return molecule
 
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
