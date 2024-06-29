@@ -41,6 +41,14 @@ def read_molecule(reader: TextIO) -> Optional[CompoundDict]:
     molecule[name] = atoms
     return molecule
 
+def read_all_molecules(reader: TextIO) -> CompoundDict:
+    """Read zero or more molecules from reader, returning a list of the molecule information.
+
+    >>> compnd1 = 'COMPND T1\\nATOM N 0.1 0.2 0.3 \\nATOM 2 N 0.2 0.1 0.0\\nEND\\n'
+    >>> compnd2 = 'COMPND T2\\nATOM N 0.1 0.2 0.3 \\nATOM 2 N 0.2 0.1 0.0\\nEND\\n'
+    >>> infile = StringIO(compnd1 +compnd2)
+    >>> result = read_all_molecules(infile)
+    >>> result['T1']
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
